@@ -35,21 +35,12 @@ scale_fill_manual(values=cbPalette)
 ggplot(data=plotar,aes(x=Tempo, y=Obs))+geom_bar(stat="identity", colour="darkblue")+scale_fill_brewer()
 
 
-print(max(Tempo))
+Hoje  <- as.character(max(Tempo))
+Ontem <- as.character(max(Tempo[Tempo!=max(Tempo)] ))
 
 
 
-
-        
-#+scale_fill_gradient(low="green",high="darkgreen")
-        
-
-        #ggplot(data=plotar,aes(x=Tempo, y=Obs, group=1)) + geom_line(size=1.5)
-
-#qplot(x=a,y=Obs)+ theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-escala <scales::seq_gradient_pal(low = "#132B43", high = "#56B1F7", space = "Lab")
-
-
-setwd("F://Drive//Business//Inflacao//Mapa")
-write.csv(base, "Base.csv")
+library(dplyr)
+nrow(filter(base, Fonte == "comperdelivery_DF", Data == "04/03/2015"))
+base %>% group_by(Fonte, Data) %>% filter(Data == Hoje | Data == Ontem) %>% summarise(counts=n())
+# o problema aqui é que "TEMPO" é DATA e o que esta na base e uma String, a qual não consigo tirar o MAX()
