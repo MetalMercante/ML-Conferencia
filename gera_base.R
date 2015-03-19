@@ -35,12 +35,19 @@ scale_fill_manual(values=cbPalette)
 ggplot(data=plotar,aes(x=Tempo, y=Obs))+geom_bar(stat="identity", colour="darkblue")+scale_fill_brewer()
 
 
-Hoje  <- as.character(max(Tempo))
-Ontem <- as.character(max(Tempo[Tempo!=max(Tempo)] ))
+Hoje  <- strftime(max(Tempo),"%d/%m/%Y")
+Ontem <- strftime(max(Tempo[Tempo!=max(Tempo)]),"%d/%m/%Y") 
+        
 
-
+strftime(max(Tempo),"%d/%m/%Y")
 
 library(dplyr)
-nrow(filter(base, Fonte == "comperdelivery_DF", Data == "04/03/2015"))
-base %>% group_by(Fonte, Data) %>% filter(Data == Hoje | Data == Ontem) %>% summarise(counts=n())
-# o problema aqui é que "TEMPO" é DATA e o que esta na base e uma String, a qual não consigo tirar o MAX()
+nrow(filter(base, Fonte == "comperdelivery_DF", Data == "05/03/2015"))
+bb<- base %>% group_by(Fonte, Data) %>% filter(Data == Hoje | Data == Ontem) %>% summarise(counts=n())
+bb
+
+bb %>% group_by(Fonte) %>% mutate(P_yest=c(NA,counts[-length(counts)])) %>% mutate(P_yest=counts/P_yest)
+
+###http://www.r-bloggers.com/good-riddance-to-excel-pivot-tables/
+### Deve dar para fazer o que fiz acima com o pacote data.table
+
